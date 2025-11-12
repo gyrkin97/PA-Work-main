@@ -1,0 +1,200 @@
+/* ===================================================================
+ * ФАЙЛ: public/css/admin/_base.css (Финальная версия с синей палитрой)
+ * ===================================================================
+ */
+
+/* ==================== Глобальные переменные (НОВАЯ СИНЯЯ ПАЛИТРА) ==================== */
+:root {
+    /* Основная синяя гамма */
+    --primary: #2a6fdb;
+    --primary-dark: #1e5abc;
+    --secondary: #4a90e2;
+    
+    /* Стандартные цвета для консистентности */
+    --light: #f8f9fa;
+    --dark: #212529;
+    --gray: #6c757d;
+    --gray-light: #e9ecef;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --info: #17a2b8;
+
+    /* Размеры и тени */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+}
+
+/* ==================== Базовые стили ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+    /* Анимированный градиентный фон как в dashboard и других модулях */
+    background: linear-gradient(-45deg, #f8fafc, #f9fbff, #f7f9fc, #fafdff);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    color: var(--dark);
+    line-height: 1.6;
+    font-size: 16px;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Анимация градиента фона */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ==================== Плавающие элементы фона ==================== */
+.floating-bg {
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.08);
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 25s infinite linear;
+    opacity: 0.7;
+}
+
+.floating-bg:nth-child(1) {
+    top: 5%;
+    left: 5%;
+    width: 400px;
+    height: 400px;
+    animation-duration: 30s;
+    background: rgba(10, 165, 233, 0.1);
+}
+
+.floating-bg:nth-child(2) {
+    top: 70%;
+    right: 5%;
+    width: 350px;
+    height: 350px;
+    animation-duration: 35s;
+    animation-direction: reverse;
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.floating-bg:nth-child(3) {
+    bottom: 10%;
+    left: 15%;
+    width: 300px;
+    height: 300px;
+    animation-duration: 40s;
+}
+
+.floating-bg:nth-child(4) {
+    top: 30%;
+    right: 20%;
+    width: 450px;
+    height: 450px;
+    animation-duration: 45s;
+    animation-direction: reverse;
+    background: rgba(139, 92, 246, 0.06);
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    25% { transform: translate(30px, 40px) rotate(90deg) scale(1.1); }
+    50% { transform: translate(0, 80px) rotate(180deg) scale(1); }
+    75% { transform: translate(-30px, 40px) rotate(270deg) scale(0.9); }
+    100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+
+/* ==================== Пульсирующие точки ==================== */
+.pulsating-dot {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.3);
+    z-index: 0;
+    animation: pulse 4s infinite ease-in-out;
+}
+
+.pulsating-dot:nth-child(5) {
+    top: 15%;
+    right: 15%;
+    animation-delay: 0s;
+}
+
+.pulsating-dot:nth-child(6) {
+    top: 80%;
+    left: 10%;
+    animation-delay: 1s;
+}
+
+.pulsating-dot:nth-child(7) {
+    bottom: 20%;
+    right: 25%;
+    animation-delay: 2s;
+}
+
+.pulsating-dot:nth-child(8) {
+    top: 40%;
+    left: 8%;
+    animation-delay: 3s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.6;
+    }
+}
+
+/* ==================== Стили для уведомлений Toastify ==================== */
+.toastify.toast-success {
+    background: var(--success);
+    color: #ffffff;
+}
+
+.toastify.toast-error {
+    background: var(--danger);
+    color: #ffffff;
+}
+
+.toastify.toast-warning {
+    background: var(--warning);
+    color: #7c2d12;
+}
+
+.toastify.toast-info {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* ==================== Стили для спиннера ==================== */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: var(--primary); /* Синий цвет */
+    animation: spin 1s ease infinite, fadeIn 0.2s ease-in-out;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

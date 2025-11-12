@@ -1,0 +1,653 @@
+/* =================================================================== */
+/* File: help.css */
+/* Description: Стили для страницы справочной информации */
+/* =================================================================== */
+
+/* Стили для кнопки возврата на дашборд */
+.back-to-dashboard {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-light);
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: var(--glass-effect);
+    transition: var(--transition);
+    margin-right: 16px;
+}
+
+.back-to-dashboard:hover {
+    background: white;
+    color: var(--primary);
+    transform: translateX(-5px);
+}
+
+/* Вкладки с видами измерений */
+/* Основные вкладки: увеличенный размер и визуальный приоритет */
+.measurement-tabs {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    --icon-size: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px 14px 24px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+    color: #364152;
+    cursor: pointer;
+    transition: background .25s ease, box-shadow .25s ease, transform .25s ease, color .25s ease;
+    position: relative;
+}
+
+.tab-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(29,78,216,0.08), rgba(29,78,216,0.02));
+    opacity: 0;
+    transition: opacity .3s ease;
+    pointer-events: none;
+}
+
+.tab-btn i {
+    font-size: 16px;
+}
+
+.tab-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px -6px rgba(29,78,216,0.25);
+}
+
+.tab-btn:hover::before { opacity: 1; }
+
+.tab-btn.active {
+    background: #1d4ed8;
+    color: #fff;
+    border-color: #1d4ed8;
+    box-shadow: 0 8px 24px -6px rgba(29,78,216,0.45);
+}
+
+.tab-btn.active::before { opacity: 0; }
+
+/* Контент вкладок */
+.tab-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Сетка документов */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Карточка документа */
+.doc-card {
+    background: var(--glass-effect);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: var(--transition);
+}
+
+.doc-card:hover {
+    background: white;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+
+.doc-icon {
+    width: 45px;
+    height: 45px;
+    background: rgba(37, 99, 235, 0.1);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 20px;
+}
+
+.doc-info {
+    flex: 1;
+}
+
+.doc-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+}
+
+.doc-info p {
+    font-size: 13px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.doc-download {
+    color: var(--text-light);
+    font-size: 18px;
+    padding: 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.doc-download:hover {
+    color: var(--primary);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* ========== Стили для под-вкладок ========== */
+.sub-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.sub-tab-btn {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.04);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text);
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sub-tab-btn.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+.sub-tab-content {
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.sub-tab-content.active {
+    display: block !important;
+    opacity: 1;
+}
+
+/* SVG icon sizing for sub-tabs */
+.icon-svg {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+/* Slightly adjust doc-card layout for calculator/tool cards */
+.doc-card .doc-icon i,
+.doc-card .doc-icon svg {
+    font-size: 18px;
+}
+
+/* Стили для SVG-иконок в основных вкладках */
+.measurement-tabs .main-icon-svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Иконка-шестерёнка FontAwesome подгоняем под общий размер */
+.tab-btn i.fas.fa-cog { font-size: var(--icon-size); }
+
+/* Цвет иконок наследуется от состояния кнопки (currentColor в SVG) */
+.measurement-tabs .main-icon-svg path,
+.measurement-tabs .main-icon-svg circle { transition: fill .25s ease, stroke .25s ease; }
+
+/* Принудительно синие иконки на неактивных вкладках */
+.tab-btn:not(.active) .main-icon-svg path,
+.tab-btn:not(.active) .main-icon-svg circle {
+    fill: #1d4ed8;
+    stroke: #1d4ed8;
+}
+
+.tab-btn:not(.active) .main-icon-svg circle[fill="none"],
+.tab-btn:not(.active) .main-icon-svg path[fill="none"] {
+    fill: none;
+}
+
+/* Активная вкладка — белые иконки */
+.tab-btn.active .main-icon-svg path,
+.tab-btn.active .main-icon-svg circle {
+    fill: #ffffff;
+    stroke: #ffffff;
+}
+
+.tab-btn.active .main-icon-svg circle[fill="none"],
+.tab-btn.active .main-icon-svg path[fill="none"] {
+    fill: none;
+}
+
+.tab-btn.active i.fas.fa-cog { color: #ffffff; }
+
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .measurement-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 16px 22px;
+    }
+    
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Расположение профиля в правом верхнем углу (фиксированная/абсолютная панель) */
+header.new-header {
+    position: relative;
+}
+
+.user-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 30;
+}
+
+.user-profile {
+    padding: 8px 14px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 0.95rem;
+}
+
+.back-to-dashboard.logout-button {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========== Стили для калькуляторов ========== */
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.calculator-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(29,78,216,0.03));
+    border: 1px solid rgba(29,78,216,0.15);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all .3s ease;
+}
+
+.calculator-card:hover {
+    border-color: rgba(29,78,216,0.3);
+    box-shadow: 0 8px 24px rgba(29,78,216,0.12);
+    transform: translateY(-2px);
+}
+
+.calculator-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    color: #1d4ed8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.calculator-card h3 i {
+    font-size: 18px;
+}
+
+.calc-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.calc-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.calc-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.calc-group input,
+.calc-group select {
+    padding: 10px 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.calc-group input:focus,
+.calc-group select:focus {
+    outline: none;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+}
+
+.calc-btn {
+    padding: 10px 16px;
+    background: #1d4ed8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s ease;
+    margin-top: 4px;
+}
+
+.calc-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(29,78,216,0.3);
+}
+
+.calc-btn:active {
+    transform: translateY(0);
+}
+
+.result-input {
+    background: #f1f5f9 !important;
+    color: #1d4ed8 !important;
+    font-weight: 600;
+}
+
+.calc-divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    margin: 16px 0;
+}
+
+.calc-results {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+.result-row span {
+    color: #64748b;
+}
+
+.result-row strong {
+    color: #1d4ed8;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.calc-info {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(29,78,216,0.05);
+    border-left: 3px solid #1d4ed8;
+    border-radius: 4px;
+}
+
+.calc-info small {
+    color: #475569;
+    font-size: 12px;
+}
+
+/* ========== Селектор калькуляторов ========== */
+.calculator-selector {
+    padding: 20px 0;
+}
+
+.calculator-selector h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin: 0 0 16px 0;
+}
+
+.selector-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.selector-btn {
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 2px solid rgba(29,78,216,0.2);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #364152;
+    transition: all .3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.selector-btn i {
+    font-size: 24px;
+    color: #1d4ed8;
+}
+
+.selector-btn:hover {
+    border-color: #1d4ed8;
+    background: rgba(29,78,216,0.05);
+    transform: translateY(-2px);
+}
+
+.selector-btn.active {
+    background: #1d4ed8;
+    color: #ffffff;
+    border-color: #1d4ed8;
+    box-shadow: 0 6px 20px rgba(29,78,216,0.25);
+}
+
+.selector-btn.active i {
+    color: #ffffff;
+}
+
+/* Контейнеры калькуляторов */
+.calc-container {
+    display: none;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.calc-container.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ========== Компактный вид калькуляторов ========== */
+.calc-compact {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.calculator-card-compact {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(29,78,216,0.03));
+    border: 1px solid rgba(29,78,216,0.15);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all .3s ease;
+}
+
+.calculator-card-compact:hover {
+    border-color: rgba(29,78,216,0.3);
+    box-shadow: 0 8px 24px rgba(29,78,216,0.12);
+}
+
+.calculator-card-compact h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+    color: #1d4ed8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.calculator-card-compact h3 i {
+    font-size: 20px;
+}
+
+/* Двойной ввод (поля рядом с разделителем) */
+.calc-dual-input {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.calc-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d4ed8;
+    font-size: 20px;
+    padding-top: 20px;
+}
+
+.calc-dual-input .calc-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.calc-dual-input .calc-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.calc-dual-input .calc-group input {
+    padding: 12px 14px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color .2s ease, box-shadow .2s ease;
+    background: #ffffff;
+}
+
+.calc-dual-input .calc-group input:focus {
+    outline: none;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+}
+
+@media (max-width: 600px) {
+    .calc-dual-input {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .calc-arrow {
+        transform: rotate(90deg);
+        padding: 0;
+    }
+}
+
+/* ========== Иконка НСХ (Ω ⇄ °C) ========== */
+.nsx-icon {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d4ed8;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.selector-btn.active .nsx-icon {
+    color: #ffffff;
+}
+
+.nsx-icon-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d4ed8;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+}
+
+/* ========== Иконка Термопары (mV ⇄ °C) ========== */
+.tc-icon {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d4ed8;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.tc-icon-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d4ed8;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+}
