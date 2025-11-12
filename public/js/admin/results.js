@@ -1,0 +1,589 @@
+// ===================================================================
+// Файл: public/js/admin/results.js (ПОЛНАЯ, ФИНАЛЬНАЯ, ЭТАЛОННАЯ ВЕРСИЯ)
+// Описание: Управляет всей логикой вкладки "Результаты": загрузка,
+// отображение, пагинация, сортировка, поиск, удаление и открытие
+// модальных окон для протокола или ручной проверки.
+// ===================================================================
+
+import { pluralize, escapeHTML } from '../utils/utils.js';
+import { showToast } from './ui.js';
+import { showConfirmModal, openModal, closeModal } from '../common/modals.js';
+import { fetchResults, deleteResults, fetchProtocol, fetchQuestionsForReview, submitBatchReview } from '../common/api-client.js';
+
+// --- Состояние модуля ---
+let currentTestId = null;
+let currentSearch = '';
+let currentSort = { column: 'date', order: 'desc' };
+let currentPage = 1;
+let debounceTimer;
+let selectedResultIds = new Set();
+const RESULTS_PER_PAGE = 10;
+let reviewClickHandler;
+
+/**
+ * Обрабатывает поступление нового результата в реальном времени от SSE.
+ */
+export function prependNewResultRow(result) {
+    console.log('📥 Функция prependNewResultRow вызвана с данными:', result);
+    
+    const isViewingAnyTestDashboard = document.querySelector('.test-dashboard');
+    if (!isViewingAnyTestDashboard) {
+        console.log('ℹ️ Пользователь не находится на странице дашборда конкретного теста. Обновление таблицы не требуется.');
+        return;
+    }
+
+    const isViewingCorrectTest = document.querySelector(`#tab-results.active`) && String(currentTestId) === String(result.testId);
+    
+    if (isViewingCorrectTest) {
+        // Новые результаты ВСЕГДА добавляем сверху таблицы независимо от сортировки
+        const tbody = document.querySelector('.admin-table tbody');
+        if (tbody) {
+            // Используем данные напрямую из SSE (они уже полные)
+            const score = result.score ?? 0;
+            const total = result.total ?? 0;
+            const percentage = result.percentage ?? 0;
+            const passed = result.passed ?? false;
+            const fio = result.fio || 'Неизвестно';
+            const date = result.date || new Date().toISOString();
+            const status = result.status || 'completed';
+            
+            let statusClass, statusText, percentageClass;
+            
+            if (status === 'pending_review') {
+                statusClass = 'status-pending';
+                statusText = 'На проверке';
+                percentageClass = 'status-pending';
+            } else {
+                statusClass = passed ? 'status-pass' : 'status-fail';
+                statusText = passed ? 'СДАН' : 'НЕ СДАН';
+                percentageClass = passed ? 'status-pass' : 'status-fail';
+            }
+            
+            const rowClass = status === 'pending_review' ? 'needs-review new-result-highlight' : 'new-result-highlight';
+            const rowTitle = status === 'pending_review' ? "Нажмите для ручной проверки" : "Нажмите для просмотра протокола";
+            
+            const newRow = document.createElement('tr');
+            newRow.setAttribute('data-id', result.id);
+            newRow.setAttribute('data-fio', escapeHTML(fio));
+            newRow.className = rowClass;
+            newRow.style.cursor = 'pointer';
+            newRow.title = rowTitle;
+            
+            newRow.innerHTML = `
+                <td><input type="checkbox" class="result-checkbox" data-id="${result.id}"></td>
+                <td>${escapeHTML(fio)}</td>
+                <td>${score}/${total}</td>
+                <td><span class="status-label ${statusClass}">${statusText}</span></td>
+                <td class="percentage-cell ${percentageClass}">${percentage}%</td>
+                <td>${new Date(date).toLocaleString('ru-RU')}</td>
+                <td class="actions-cell">
+                    <button type="button" class="btn-icon delete" data-id="${result.id}" title="Удалить"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            `;
+            
+            tbody.insertBefore(newRow, tbody.firstChild);
+            
+            // Убираем подсветку через 3 секунды
+            setTimeout(() => {
+                newRow.classList.remove('new-result-highlight');
+            }, 3000);
+            
+            console.log('✅ Новый результат добавлен в начало таблицы.');
+            return;
+        }
+    }
+    
+    // Для всех остальных случаев просто помечаем вкладку
+    const tabButton = document.querySelector('.tab-button[data-tab="results"]');
+    if (tabButton) {
+        tabButton.classList.add('has-update');
+        console.log('✅ Вкладка "Результаты" помечена классом has-update для обновления при следующем просмотре.');
+    }
+}
+
+// --- Функции управления состоянием UI ---
+function saveUiState() {
+    if (!currentTestId) return;
+    sessionStorage.setItem(`resultsState_${currentTestId}`, JSON.stringify({ search: currentSearch, sort: currentSort, page: currentPage }));
+}
+
+function loadUiState() {
+    if (!currentTestId) return null;
+    const savedState = sessionStorage.getItem(`resultsState_${currentTestId}`);
+    return savedState ? JSON.parse(savedState) : null;
+}
+
+/**
+ * Основная функция для загрузки и отображения результатов.
+ */
+export async function loadResults() {
+    const container = document.getElementById('resultsTableContainer');
+    if (!container) return;
+    saveUiState();
+    container.innerHTML = '<div class="spinner"></div>';
+    selectedResultIds.clear();
+    updateBulkActionsUI();
+
+    try {
+        const data = await fetchResults(currentTestId, { search: currentSearch, sort: currentSort.column, order: currentSort.order, page: currentPage, limit: RESULTS_PER_PAGE });
+        if (!data || !data.results) {
+            throw new Error("Получены некорректные данные с сервера.");
+        }
+        if (data.results.length === 0 && data.currentPage > 1) {
+            currentPage = data.totalPages > 0 ? data.totalPages : 1;
+            loadResults();
+            return;
+        }
+        renderResultsTable(data.results);
+        renderPagination(data.totalPages, data.currentPage);
+    } catch (error) {
+        container.innerHTML = `<div class="empty-state-message"><i class="fas fa-exclamation-triangle"></i><span>Не удалось загрузить результаты.</span></div>`;
+        console.error("Ошибка при загрузке результатов:", error);
+    }
+}
+
+/**
+ * Рендерит HTML-таблицу с результатами.
+ */
+function renderResultsTable(results) {
+    const container = document.getElementById('resultsTableContainer');
+    if (results.length === 0) {
+        const message = currentSearch ? `По запросу "${escapeHTML(currentSearch)}" ничего не найдено.` : 'Для этого теста пока нет результатов.';
+        container.innerHTML = `<div class="empty-state-message"><i class="fas fa-folder-open"></i><span>${message}</span></div>`;
+        return;
+    }
+
+    const sortIndicator = (column) => (column !== currentSort.column) ? '' : (currentSort.order === 'asc' ? ' ▲' : ' ▼');
+    
+    const tableHeader = `
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAllResultsCheckbox" title="Выбрать все на странице"></th>
+                <th class="sortable" data-sort="fio">ФИО${sortIndicator('fio')}</th>
+                <th class="sortable" data-sort="score">Результат${sortIndicator('score')}</th>
+                <th class="sortable" data-sort="status">Статус${sortIndicator('status')}</th>
+                <th class="sortable" data-sort="percentage">Процент${sortIndicator('percentage')}</th>
+                <th class="sortable" data-sort="date">Дата и время${sortIndicator('date')}</th>
+                <th>Действия</th>
+            </tr>
+        </thead>`;
+
+    const tableBody = results.map(result => {
+        let statusClass, statusText, percentageClass;
+
+        if (result.status === 'pending_review') {
+            statusClass = 'status-pending';
+            statusText = 'На проверке';
+            percentageClass = 'status-pending';
+        } else {
+            statusClass = result.passed ? 'status-pass' : 'status-fail';
+            statusText = result.passed ? 'СДАН' : 'НЕ СДАН';
+            percentageClass = result.passed ? 'status-pass' : 'status-fail';
+        }
+        
+        const rowClass = result.status === 'pending_review' ? 'needs-review' : '';
+        const rowTitle = result.status === 'pending_review' ? "Нажмите для ручной проверки" : "Нажмите для просмотра протокола";
+
+        return `
+            <tr data-id="${result.id}" data-fio="${escapeHTML(result.fio)}" class="${rowClass}" style="cursor: pointer;" title="${rowTitle}">
+                <td><input type="checkbox" class="result-checkbox" data-id="${result.id}"></td>
+                <td>${escapeHTML(result.fio)}</td>
+                <td>${result.score}/${result.total}</td>
+                <td><span class="status-label ${statusClass}">${statusText}</span></td>
+                <td class="percentage-cell ${percentageClass}">${result.percentage}%</td>
+                <td>${new Date(result.date).toLocaleString('ru-RU')}</td>
+                <td class="actions-cell">
+                    <button type="button" class="btn-icon delete" data-id="${result.id}" title="Удалить"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+        
+    container.innerHTML = `<div class="table-container"><table class="admin-table">${tableHeader}<tbody>${tableBody}</tbody></table></div>`;
+}
+
+/**
+ * Рендерит пагинацию.
+ */
+function renderPagination(totalPages, currentPageNum) {
+    const container = document.getElementById('paginationContainer');
+    if (!container || totalPages <= 1) {
+        if (container) container.innerHTML = '';
+        return;
+    }
+    let paginationHTML = `<button class="btn btn-outline" data-page="${currentPageNum - 1}" ${currentPageNum === 1 ? 'disabled' : ''}>&laquo;</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<button class="btn ${i === currentPageNum ? '' : 'btn-outline'}" data-page="${i}">${i}</button>`;
+    }
+    paginationHTML += `<button class="btn btn-outline" data-page="${currentPageNum + 1}" ${currentPageNum === totalPages ? 'disabled' : ''}>&raquo;</button>`;
+    container.innerHTML = paginationHTML;
+}
+
+/**
+ * Обновляет UI для кнопок массовых действий.
+ */
+function updateBulkActionsUI() {
+    const deleteBtn = document.getElementById('deleteSelectedResultsBtn');
+    if (!deleteBtn) return;
+    const count = selectedResultIds.size;
+    deleteBtn.innerHTML = `<i class="fas fa-trash-alt"></i> Удалить выбранные (${count})`;
+    deleteBtn.classList.toggle('visible', count > 0);
+    
+    const selectAllCheckbox = document.getElementById('selectAllResultsCheckbox');
+    if (selectAllCheckbox) {
+        const allOnPage = document.querySelectorAll('.result-checkbox').length;
+        selectAllCheckbox.checked = count === allOnPage && allOnPage > 0;
+        selectAllCheckbox.indeterminate = count > 0 && count < allOnPage;
+    }
+}
+
+/**
+ * Выполняет удаление выбранных результатов.
+ */
+async function executeDelete() {
+    const idsToDelete = Array.from(selectedResultIds);
+    if (idsToDelete.length === 0) return;
+
+    const count = idsToDelete.length;
+    const textForm = pluralize(count, 'result');
+    const deleteBtn = document.getElementById('deleteSelectedResultsBtn');
+    if (deleteBtn) deleteBtn.disabled = true;
+
+    try {
+        await deleteResults(idsToDelete);
+        showToast(`${count} ${textForm} успешно удалено.`, 'success');
+
+        idsToDelete.forEach(id => {
+            const rowToRemove = document.querySelector(`#resultsTableContainer tr[data-id="${id}"]`);
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+        });
+        
+        selectedResultIds.clear();
+        updateBulkActionsUI();
+
+        const remainingRows = document.querySelectorAll('#resultsTableContainer tr[data-id]').length;
+        if (remainingRows === 0) {
+            await loadResults();
+        }
+
+    } catch (error) {
+        console.error("Ошибка удаления результатов:", error);
+    } finally {
+        if (deleteBtn) deleteBtn.disabled = false;
+    }
+}
+
+/**
+ * Показывает модальное окно подтверждения для массового удаления.
+ */
+function confirmAndHandleBulkDelete() {
+    if (selectedResultIds.size === 0) return;
+    showConfirmModal({
+        title: `Удалить ${selectedResultIds.size} ${pluralize(selectedResultIds.size, 'result')}?`,
+        text: 'Это действие необратимо. Вы уверены?',
+        onConfirm: executeDelete,
+        isInput: false
+    });
+}
+
+/**
+ * Форматирует время из секунд в строку "X мин Y сек".
+ * @param {number} totalSeconds - Общее количество секунд.
+ * @returns {string} Отформатированная строка или '—'.
+ */
+function formatTimeSpent(totalSeconds) {
+    if (totalSeconds === null || typeof totalSeconds === 'undefined' || totalSeconds < 0) {
+        return '—';
+    }
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = Math.round(totalSeconds % 60);
+    if (minutes === 0 && seconds === 0) {
+        return totalSeconds > 0 ? '< 1 сек' : '0 сек';
+    }
+    const parts = [];
+    if (minutes > 0) parts.push(`${minutes} мин`);
+    if (seconds > 0) parts.push(`${seconds} сек`);
+    return parts.join(' ');
+}
+
+/**
+ * Показывает модальное окно с протоколом теста.
+ */
+async function showProtocolModal(resultId, fio) {
+    const modal = document.getElementById('protocolModal');
+    openModal(modal);
+    const titleEl = document.getElementById('protocolModalTitle');
+    const contentEl = document.getElementById('protocolContent');
+    titleEl.innerHTML = `Загрузка протокола...`;
+    contentEl.innerHTML = '<div class="spinner"></div>';
+    try {
+        const { summary, protocol: protocolData } = await fetchProtocol(resultId);
+        
+        const statusClass = summary.passed ? 'status-pass' : 'status-fail';
+        const statusText = summary.passed ? 'СДАН' : 'НЕ СДАН';
+        titleEl.innerHTML = `
+            <div class="protocol-title-wrapper">
+                <span>Протокол: ${escapeHTML(fio)}</span>
+                <span class="protocol-status ${statusClass}">${statusText}</span>
+            </div>`;
+
+        if (!protocolData || protocolData.length === 0) {
+            contentEl.innerHTML = '<div class="empty-state-message">Детальная информация для этого теста недоступна.</div>';
+            return;
+        }
+
+        const summaryHTML = `
+            <div class="protocol-summary">
+                <div class="summary-item">
+                    <span class="summary-value">${summary.score}/${summary.total}</span>
+                    <span class="summary-label">Правильных ответов</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-value">${summary.percentage}%</span>
+                    <span class="summary-label">Результат</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-value">${formatTimeSpent(summary.time_spent)}</span>
+                    <span class="summary-label">Затрачено времени</span>
+                </div>
+            </div>`;
+
+        const protocolHTML = protocolData.map((item, index) => {
+            const getAnswerHtml = (data) => {
+                if (!data) return "<em>— ответ не дан —</em>";
+                if (item.type === 'match') {
+                    return '<ul>' + item.match_prompts.map((p, i) => `<li>${escapeHTML(p)} &rarr; ${escapeHTML(data[i] || '—')}</li>`).join('') + '</ul>';
+                }
+                return escapeHTML(data);
+            };
+
+            const userAnswerHtml = getAnswerHtml(item.chosenAnswerText || item.chosen_answers_match);
+            const correctAnswerHtml = getAnswerHtml(item.correctAnswerText || item.correct_answers_match);
+            
+            const correctnessIcon = item.isCorrect 
+                ? '<div class="answer-status-icon correct"><i class="fas fa-check"></i></div>'
+                : '<div class="answer-status-icon incorrect"><i class="fas fa-times"></i></div>';
+
+            const explanationHtml = item.explain 
+                ? `<div class="protocol-explanation"><i class="fas fa-info-circle"></i> ${escapeHTML(item.explain)}</div>` 
+                : '';
+
+            return `
+                <div class="protocol-item" data-correct="${item.isCorrect}">
+                    <div class="protocol-item-header">
+                        <span class="protocol-question-number">${index + 1}</span>
+                        <div class="protocol-question-text">${escapeHTML(item.questionText)}</div>
+                    </div>
+                    <div class="protocol-item-body">
+                        <div class="protocol-answer user-answer">
+                            ${correctnessIcon}
+                            <div class="answer-details">
+                                <div class="answer-label">Ваш ответ</div>
+                                <div class="answer-content">${userAnswerHtml}</div>
+                            </div>
+                        </div>
+                        ${!item.isCorrect ? `
+                        <div class="protocol-answer correct-answer">
+                            <div class="answer-status-icon reference"><i class="fas fa-check-double"></i></div>
+                            <div class="answer-details">
+                                <div class="answer-label">Правильный ответ</div>
+                                <div class="answer-content">${correctAnswerHtml}</div>
+                            </div>
+                        </div>` : ''}
+                    </div>
+                    ${explanationHtml}
+                </div>`;
+        }).join('');
+
+        contentEl.innerHTML = summaryHTML + protocolHTML;
+
+    } catch (error) {
+        contentEl.innerHTML = `<div class="empty-state-message"><i class="fas fa-exclamation-triangle"></i><span>Не удалось загрузить протокол.</span></div>`;
+        console.error("Ошибка загрузки протокола:", error);
+    }
+}
+
+/**
+ * Показывает модальное окно для ручной проверки ответов.
+ */
+async function showReviewModal(resultId, fio) {
+    const modal = document.getElementById('reviewModal');
+    openModal(modal);
+    const title = document.getElementById('reviewModalTitle');
+    const content = document.getElementById('reviewContent');
+    const actions = modal.querySelector('.modal-actions');
+    title.innerHTML = `Проверка ответов для: ${escapeHTML(fio)}`;
+    content.innerHTML = '<div class="spinner"></div>';
+    actions.innerHTML = '';
+    try {
+        const questionsToReview = await fetchQuestionsForReview(resultId);
+        if (questionsToReview.length === 0) {
+            content.innerHTML = '<p class="empty-state-message">Нет вопросов для проверки.</p>';
+            actions.innerHTML = '<button type="button" class="btn" data-modal-close>Закрыть</button>';
+            return;
+        }
+        content.innerHTML = questionsToReview.map(q => `
+            <div class="review-item-compact" data-answer-id="${q.answerId}">
+                <div class="review-item-content-compact">
+                    <div class="review-question-text-compact">${escapeHTML(q.questionText)}</div>
+                    <div class="review-user-answer-compact">${escapeHTML(q.userAnswer) || "<em>— ответ не дан —</em>"}</div>
+                </div>
+                <div class="review-item-actions-compact">
+                    <button type="button" class="btn-review-compact btn-review-correct-compact" data-correct="true" title="Правильно"><i class="fas fa-check"></i></button>
+                    <button type="button" class="btn-review-compact btn-review-incorrect-compact" data-correct="false" title="Неправильно"><i class="fas fa-times"></i></button>
+                </div>
+            </div>`).join('');
+        actions.innerHTML = '<button id="reviewFinishBtn" type="button" class="btn">Завершить проверку</button>';
+    } catch (error) {
+        content.innerHTML = `<p class="error-message">Не удалось загрузить вопросы для проверки.</p>`;
+    }
+}
+
+/**
+ * Устанавливает слушатели событий для модального окна проверки.
+ */
+function setupReviewModalListeners() {
+    const reviewModal = document.getElementById('reviewModal');
+    if (reviewClickHandler) reviewModal.removeEventListener('click', reviewClickHandler);
+    
+    reviewClickHandler = (e) => {
+        const reviewBtn = e.target.closest('.btn-review-compact');
+        if (!reviewBtn) return;
+        const isCorrect = reviewBtn.dataset.correct === 'true';
+        const reviewItem = reviewBtn.closest('.review-item-compact');
+        reviewItem.classList.remove('is-judged-correct', 'is-judged-incorrect');
+        reviewItem.classList.add(isCorrect ? 'is-judged-correct' : 'is-judged-incorrect');
+        reviewItem.dataset.judgedStatus = isCorrect ? 'correct' : 'incorrect';
+    };
+    
+    reviewModal.addEventListener('click', reviewClickHandler);
+}
+
+/**
+ * Инициализирует весь модуль "Результаты".
+ */
+export function initResultsModule(testId) {
+    currentTestId = testId;
+    const savedState = loadUiState();
+    currentPage = savedState?.page || 1;
+    currentSearch = savedState?.search || '';
+    currentSort = savedState?.sort || { column: 'date', order: 'desc' };
+    selectedResultIds.clear();
+
+    const container = document.getElementById('tab-results');
+    container.innerHTML = `
+      <div class="card">
+        <div class="admin-controls">
+            <h2>Результаты Теста</h2>
+            <div class="admin-actions">
+                <button id="deleteSelectedResultsBtn" class="btn btn-danger">Удалить выбранные (0)</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="search" id="results-search-input" class="form-control" placeholder="Поиск по ФИО..." value="${escapeHTML(currentSearch)}">
+        </div>
+        <div id="resultsTableContainer"><div class="spinner"></div></div>
+        <div id="paginationContainer"></div>
+      </div>`;
+    
+    container.addEventListener('click', (e) => {
+        const target = e.target;
+    
+        const pageBtn = target.closest('#paginationContainer .btn:not(:disabled)');
+        if (pageBtn) {
+            currentPage = parseInt(pageBtn.dataset.page, 10);
+            loadResults();
+            return;
+        }
+        
+        const sortableHeader = target.closest('th.sortable');
+        if (sortableHeader) {
+            const newSortColumn = sortableHeader.dataset.sort;
+            currentSort.order = (currentSort.column === newSortColumn && currentSort.order === 'desc') ? 'asc' : 'desc';
+            currentSort.column = newSortColumn;
+            currentPage = 1;
+            loadResults();
+            return;
+        }
+        
+        const deleteBtn = target.closest('.btn-icon.delete');
+        if (deleteBtn) {
+            e.stopPropagation();
+            const resultId = deleteBtn.dataset.id;
+            const fio = deleteBtn.closest('tr')?.dataset.fio || `ID ${resultId}`;
+            showConfirmModal({
+                title: 'Удалить результат?', 
+                text: `Вы уверены, что хотите удалить запись для "${escapeHTML(fio)}"?`,
+                onConfirm: () => { 
+                    selectedResultIds.clear(); 
+                    selectedResultIds.add(resultId); 
+                    executeDelete(); 
+                }
+            });
+            return;
+        }
+        
+        if (target.matches('.result-checkbox, #selectAllResultsCheckbox')) {
+            if (target.id === 'selectAllResultsCheckbox') {
+                document.querySelectorAll('.result-checkbox').forEach(cb => {
+                    cb.checked = target.checked;
+                    target.checked ? selectedResultIds.add(cb.dataset.id) : selectedResultIds.delete(cb.dataset.id);
+                });
+            } else {
+                target.checked ? selectedResultIds.add(target.dataset.id) : selectedResultIds.delete(target.dataset.id);
+            }
+            updateBulkActionsUI();
+            return;
+        }
+        
+        const row = target.closest('tr[data-id]');
+        if (row) {
+            console.log("[ACTION] Клик по строке. Открытие модального окна для resultId:", row.dataset.id);
+            row.classList.contains('needs-review') 
+                ? showReviewModal(row.dataset.id, row.dataset.fio) 
+                : showProtocolModal(row.dataset.id, row.dataset.fio);
+            return;
+        }
+        
+        if (target.closest('#deleteSelectedResultsBtn')) {
+            confirmAndHandleBulkDelete();
+        }
+    });
+
+    const searchInput = document.getElementById('results-search-input');
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            currentSearch = searchInput.value;
+            currentPage = 1;
+            loadResults();
+        }, 350);
+    });
+
+    document.body.addEventListener('click', async (e) => {
+        const finishBtn = e.target.closest('#reviewFinishBtn');
+        if (!finishBtn || finishBtn.disabled) return;
+        finishBtn.disabled = true;
+        finishBtn.textContent = 'Сохранение...';
+        const verdicts = Array.from(document.querySelectorAll('#reviewContent [data-judged-status]')).map(item => ({
+            answerId: parseInt(item.dataset.answerId, 10),
+            isCorrect: item.dataset.judgedStatus === 'correct'
+        }));
+        try {
+            await submitBatchReview(verdicts);
+            showToast('Проверка успешно завершена!', 'success');
+            closeModal(document.getElementById('reviewModal'));
+            await loadResults();
+        } catch (error) {
+            console.error("Ошибка при отправке вердиктов:", error);
+        } finally {
+            finishBtn.disabled = false;
+            finishBtn.textContent = 'Завершить проверку';
+        }
+    });
+
+    setupReviewModalListeners();
+    loadResults();
+}
