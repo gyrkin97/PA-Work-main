@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ожидание подтверждения</title>
+    <link rel="stylesheet" href="/css/pending-approval.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background"></div>
+    <div class="glass-background"></div>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="pending-container">
+        <div class="pending-card">
+            <!-- Анимация проверки -->
+            <div class="animation-container">
+                <div class="clock-loader">
+                    <div class="clock-face">
+                        <div class="clock-hand hour-hand"></div>
+                        <div class="clock-hand minute-hand"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Заголовок -->
+            <h1 class="pending-title">Аккаунт на модерации</h1>
+            
+            <!-- Описание -->
+            <div class="pending-description">
+                <p>Ваша регистрация ожидает подтверждения.</p>
+                <p>После проверки учетной записи вы получите доступ к порталу.</p>
+            </div>
+
+            <!-- Информация -->
+            <div class="pending-info">
+                <div class="info-item user-info">
+                    <div class="info-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <span class="user-name-display">Загрузка...</span>
+                </div>
+                <div class="info-divider"></div>
+                <div class="info-item auto-login-info">
+                    <div class="info-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <span>Автоматический вход после подтверждения</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Загружаем имя пользователя
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const response = await fetch('/api/current-user', {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    const userNameDisplay = document.querySelector('.user-name-display');
+                    if (userNameDisplay && user.name) {
+                        userNameDisplay.textContent = user.name;
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки данных пользователя:', error);
+            }
+            
+            // Автоматическая проверка статуса каждые 3 секунды
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/current-user', {
+                        credentials: 'include'
+                    });
+                    
+                    if (response.ok) {
+                        const user = await response.json();
+                        
+                        // Если статус изменился на active, перенаправляем на dashboard
+                        if (user.status === 'active') {
+                            window.location.href = '/dashboard';
+                        }
+                        // Если статус rejected, перенаправляем на страницу отклонения
+                        else if (user.status === 'rejected') {
+                            window.location.href = '/registration-rejected';
+                        }
+                    } else if (response.status === 404) {
+                        // Пользователь удален из системы
+                        window.location.href = '/access-denied';
+                    } else if (response.status === 401) {
+                        // Пользователь разлогинен, перенаправляем на главную
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    console.error('Ошибка проверки статуса:', error);
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

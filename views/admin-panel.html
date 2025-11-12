@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администрирования - Корпоративный портал</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin/admin-panel.css">
+</head>
+<body>
+    <!-- Декоративные анимированные элементы фона -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="pulsating-dot"></div>
+    <div class="pulsating-dot"></div>
+    <div class="pulsating-dot"></div>
+    <div class="pulsating-dot"></div>
+
+    <!-- Шапка -->
+    <div class="new-header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-cube"></i>
+            </div>
+            <div class="logo-text">
+                <h1>Админ-панель</h1>
+                <p>Управление системой</p>
+            </div>
+        </div>
+        <div class="user-actions">
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">АД</div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Загрузка...</span>
+                    <span class="user-role" id="userRole">...</span>
+                </div>
+            </div>
+            <a href="/logout" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <div class="app-body">
+        <!-- Сайдбар -->
+        <aside class="sidebar">
+            <ul class="nav-links">
+                <li><a href="#" class="active" data-section="home"><i class="fas fa-home"></i> <span>Главная</span></a></li>
+                <li><a href="#" data-section="users"><i class="fas fa-users"></i> <span>Пользователи</span></a></li>
+                <li><a href="#" data-section="analytics"><i class="fas fa-chart-bar"></i> <span>Аналитика</span></a></li>
+                <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> <span>Настройки</span></a></li>
+                <li><a href="#" data-section="notifications"><i class="fas fa-bell"></i> <span>Уведомления</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <a href="/dashboard" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> <span>Вернуться к порталу</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Основной контент -->
+        <main class="main-content">
+            <div class="content">
+                <!-- Главная страница -->
+                <div id="home" class="content-section active">
+                    <div class="welcome-section">
+                        <h1 class="welcome-title">Добро пожаловать в панель администрирования</h1>
+                        <p class="welcome-subtitle">
+                            Управляйте пользователями, отслеживайте активность системы,
+                            настраивайте параметры и анализируйте статистику.
+                        </p>
+                        
+                        <div class="feature-cards">
+                            <div class="feature-card" data-section="users">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>Управление пользователями</h3>
+                                <p>Добавляйте новых пользователей, назначайте роли, управляйте доступом и отслеживайте активность.</p>
+                            </div>
+                            
+                            <div class="feature-card" data-section="analytics">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3>Аналитика и статистика</h3>
+                                <p>Получайте детальную статистику по активности пользователей, регистрациям и использованию системы.</p>
+                            </div>
+                            
+                            <div class="feature-card" data-section="settings">
+                                <div class="feature-icon">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <h3>Настройки системы</h3>
+                                <p>Настраивайте параметры портала, управляйте модулями и оптимизируйте работу приложения.</p>
+                            </div>
+                            
+                            <div class="feature-card" data-section="notifications">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <h3>Уведомления</h3>
+                                <p>Управляйте системными уведомлениями, настраивайте оповещения и отслеживайте важные события.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Другие секции (пользователи, аналитика и т.д.) -->
+                <div id="users" class="content-section">
+                    <div class="analytics-header">
+                        <h2>Управление пользователями</h2>
+                        <p class="analytics-subtitle">Просмотр, редактирование и управление учетными записями пользователей системы</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('table2', 0, 'name')">Пользователь</th>
+                                    <th onclick="sortTable('table2', 1, 'position')">Должность</th>
+                                    <th onclick="sortTable('table2', 2, 'date')">Дата регистрации</th>
+                                    <th onclick="sortTable('table2', 3, 'status')">Статус</th>
+                                    <th onclick="sortTable('table2', 4, 'role')">Роль</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody2"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="analytics" class="content-section">
+                    <div class="analytics-header">
+                        <h2>Аналитика системы</h2>
+                        <p class="analytics-subtitle">Статистика пользователей, регистраций и активности системы</p>
+                    </div>
+
+                    <!-- Карточки с ключевыми метриками -->
+                    <div class="analytics-metrics">
+                        <div class="metric-card">
+                            <div class="metric-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Всего пользователей</span>
+                                <span class="metric-value" id="totalUsers">0</span>
+                                <span class="metric-change positive">
+                                    <i class="fas fa-arrow-up"></i> <span id="usersChange">0</span> за месяц
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon success">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Активные пользователи</span>
+                                <span class="metric-value" id="activeUsers">0</span>
+                                <span class="metric-change positive">
+                                    <i class="fas fa-percentage"></i> <span id="activePercent">0</span>% от общего
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon warning">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Ожидают одобрения</span>
+                                <span class="metric-value" id="pendingUsers">0</span>
+                                <span class="metric-change warning">
+                                    <i class="fas fa-exclamation-circle"></i> Требует внимания
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon info">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Администраторы</span>
+                                <span class="metric-value" id="adminCount">0</span>
+                                <span class="metric-change neutral">
+                                    <i class="fas fa-crown"></i> <span id="superAdminCount">0</span> суперадминов
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon primary">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="metric-info">
+                                <span class="metric-label">Регистраций за месяц</span>
+                                <span class="metric-value" id="monthRegistrations">0</span>
+                                <span class="metric-change positive">
+                                    <i class="fas fa-calendar-week"></i> <span id="weekRegistrations">0</span> за неделю
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- График регистраций -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fas fa-chart-area"></i> Регистрации за последние 30 дней</h3>
+                            <div class="chart-controls">
+                                <button class="btn-chart active" data-period="30" onclick="switchRegistrationPeriod(30)">30 дней</button>
+                                <button class="btn-chart" data-period="7" onclick="switchRegistrationPeriod(7)">7 дней</button>
+                            </div>
+                        </div>
+                        <div class="panel-content">
+                            <div class="chart-container">
+                                <canvas id="registrationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Графики статистики -->
+                    <div class="analytics-grid">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-users-cog"></i> Детализация ролей</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="roles-list" id="rolesList">
+                                    <p style="color: var(--text-light); text-align: center; padding: 20px;">Загрузка данных...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-briefcase"></i> Детализация по должностям</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="positions-list" id="positionsList">
+                                    <p style="color: var(--text-light); text-align: center; padding: 20px;">Загрузка данных...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="settings" class="content-section">
+                    <div class="analytics-header">
+                        <h2>Настройки системы</h2>
+                        <p class="analytics-subtitle">Конфигурация параметров, безопасности и функциональности портала</p>
+                    </div>
+                    
+                    <div class="settings-container">
+                        <!-- Общие настройки -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-cog"></i> Общие настройки</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="settings-group">
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Название организации</label>
+                                            <p class="setting-description">Отображается в шапке портала и документах</p>
+                                        </div>
+                                        <input type="text" class="setting-input" value="ООО 'Прибор Автоматика'" id="orgName">
+                                    </div>
+                                    
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Email администратора</label>
+                                            <p class="setting-description">Используется для важных уведомлений</p>
+                                        </div>
+                                        <input type="email" class="setting-input" value="admin@pribor-avtomatika.ru" id="adminEmail">
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Часовой пояс</label>
+                                            <p class="setting-description">Применяется для отображения времени</p>
+                                        </div>
+                                        <select class="setting-input" id="timezone">
+                                            <option value="Europe/Moscow" selected>МСК (UTC+3)</option>
+                                            <option value="Europe/Samara">Самара (UTC+4)</option>
+                                            <option value="Asia/Yekaterinburg">Екатеринбург (UTC+5)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Настройки безопасности -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-shield-alt"></i> Безопасность</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="settings-group">
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Автоматическое одобрение регистраций</label>
+                                            <p class="setting-description">Новые пользователи получают доступ без подтверждения</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="autoApprove">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Двухфакторная аутентификация</label>
+                                            <p class="setting-description">Требовать подтверждение через email при входе</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="twoFactor">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Время жизни сессии (дней)</label>
+                                            <p class="setting-description">Автоматический выход через указанное время</p>
+                                        </div>
+                                        <input type="number" class="setting-input" value="7" min="1" max="30" id="sessionDays">
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Минимальная длина пароля</label>
+                                            <p class="setting-description">Требуемое количество символов</p>
+                                        </div>
+                                        <input type="number" class="setting-input" value="8" min="6" max="20" id="minPasswordLength">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Модули системы -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-puzzle-piece"></i> Модули системы</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="settings-group">
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Модуль командировок</label>
+                                            <p class="setting-description">Управление служебными поездками</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="moduleTrips" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Модуль тестирования</label>
+                                            <p class="setting-description">Обучение и аттестация персонала</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="moduleTesting" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Модуль обслуживания оборудования</label>
+                                            <p class="setting-description">Учет и планирование ТО</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="moduleMaintenance" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Модуль поверки оборудования</label>
+                                            <p class="setting-description">График поверки средств измерений</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="moduleVerification" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Модуль ЭЦП</label>
+                                            <p class="setting-description">Управление электронными подписями</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="moduleEDS" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Уведомления -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-bell"></i> Уведомления</h3>
+                            </div>
+                            <div class="panel-content">
+                                <div class="settings-group">
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Email уведомления</label>
+                                            <p class="setting-description">Отправлять важные события на почту</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="emailNotifications" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Push уведомления</label>
+                                            <p class="setting-description">Всплывающие уведомления в браузере</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="pushNotifications">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <label class="setting-label">Уведомления о новых регистрациях</label>
+                                            <p class="setting-description">Получать alerts при новых пользователях</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="registrationNotifications" checked>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка сохранения -->
+                        <div class="settings-actions">
+                            <button class="btn btn-success" onclick="saveSettings()">
+                                <i class="fas fa-save"></i> Сохранить изменения
+                            </button>
+                            <button class="btn btn-danger" onclick="resetSettings()">
+                                <i class="fas fa-undo"></i> Сбросить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="notifications" class="content-section">
+                    <div class="analytics-header">
+                        <h2>Лента событий</h2>
+                        <p class="analytics-subtitle">Отслеживание активности пользователей, изменений и системных операций в реальном времени</p>
+                    </div>
+                    
+                    <div class="events-container">
+                        <!-- Лента событий с интегрированными фильтрами -->
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3><i class="fas fa-stream"></i> Лента событий</h3>
+                                <div class="panel-actions">
+                                    <span class="event-count" id="eventCount">0 событий</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Фильтры внутри панели -->
+                            <div class="panel-content">
+                                <div class="event-filters">
+                                    <div class="filter-group">
+                                        <label><i class="fas fa-filter"></i> Тип:</label>
+                                        <select id="eventTypeFilter" onchange="filterEvents()">
+                                            <option value="all">Все события</option>
+                                            <option value="auth">Аутентификация</option>
+                                            <option value="user">Управление пользователями</option>
+                                            <option value="security">Безопасность</option>
+                                            <option value="settings">Настройки</option>
+                                            <option value="system">Системные</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label><i class="fas fa-calendar-alt"></i> Период:</label>
+                                        <select id="periodFilter" onchange="filterEvents()">
+                                            <option value="today">Сегодня</option>
+                                            <option value="week">Неделя</option>
+                                            <option value="month" selected>Месяц</option>
+                                            <option value="all">Все время</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-group filter-search">
+                                        <label><i class="fas fa-search"></i> Поиск:</label>
+                                        <input type="text" id="searchEvents" placeholder="Имя пользователя..." oninput="filterEvents()">
+                                    </div>
+                                    <button class="btn btn-small btn-clear" onclick="clearFilters()" title="Сбросить фильтры">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Лента событий -->
+                            <div class="panel-content events-timeline-wrapper">
+                                <div class="events-timeline" id="eventsTimeline">
+                                    <!-- События будут добавлены через JavaScript -->
+                                    <div class="events-loading">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Загрузка событий...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Модальные окна -->
+    <div id="roleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Назначение роли пользователю</h2>
+                <span class="close" onclick="closeRoleModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Имя пользователя:</label>
+                    <input type="text" id="modalUserName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Выберите роль:</label>
+                    <div class="role-selector">
+                        <div class="role-option selected" data-role="user" onclick="selectRole(this)">
+                            <i class="fas fa-user"></i>
+                            <div>Пользователь</div>
+                        </div>
+                        <div class="role-option" data-role="admin" onclick="selectRole(this)">
+                            <i class="fas fa-user-shield"></i>
+                            <div>Модератор</div>
+                        </div>
+                        <div class="role-option" data-role="superadmin" onclick="selectRole(this)">
+                            <i class="fas fa-crown"></i>
+                            <div>Администратор</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-danger" onclick="closeRoleModal()">Отмена</button>
+                    <button class="btn btn-success" onclick="assignRole()">
+                        <i class="fas fa-check"></i> Назначить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Добавление пользователя</h2>
+                <span class="close" onclick="closeAddUserModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Имя пользователя:</label>
+                    <input type="text" id="newUserName" placeholder="Введите имя">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="newUserEmail" placeholder="Введите email">
+                </div>
+                <div class="form-group">
+                    <label>Роль:</label>
+                    <select id="newUserRole">
+                        <option value="user">Пользователь</option>
+                        <option value="admin">Администратор</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-danger" onclick="closeAddUserModal()">Отмена</button>
+                    <button class="btn btn-success" onclick="addNewUser()">
+                        <i class="fas fa-check"></i> Добавить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Успешно!</span>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="/js/admin/admin-panel.js?v=4"></script>
+</body>
+</html>

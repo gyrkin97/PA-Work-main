@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доступ ограничен</title>
+    <link rel="stylesheet" href="/css/access-denied.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background"></div>
+    <div class="glass-background"></div>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="access-denied-container">
+        <div class="access-denied-card">
+            <!-- Иконка ограничения доступа -->
+            <div class="animation-container">
+                <div class="denied-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+            </div>
+
+            <!-- Заголовок -->
+            <h1 class="denied-title">Доступ ограничен</h1>
+            
+            <!-- Описание -->
+            <div class="denied-description">
+                <p>Ваша учетная запись была удалена или заблокирована.</p>
+                <p>Если вы считаете, что это ошибка, свяжитесь с администратором.</p>
+            </div>
+
+            <!-- Информация -->
+            <div class="denied-info">
+                <div class="info-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Вы были автоматически выведены из системы</span>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="denied-actions">
+                <button type="button" class="btn btn-primary" id="registerAgainBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Зарегистрироваться заново
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerAgainBtn').addEventListener('click', function() {
+            window.location.href = '/logout';
+        });
+    </script>
+</body>
+</html>

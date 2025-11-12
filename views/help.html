@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прибор Автоматика | Справочная информация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/help/help.css?v=11">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+<body>
+    <!-- Декоративные элементы фона -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+
+    <div class="container">
+        <!-- Шапка -->
+        <header class="new-header">
+            <div class="logo">
+                <div class="logo-icon">ПА</div>
+                <div class="logo-text">
+                    <h1>Справочная информация</h1>
+                    <p>Документация и инструкции по видам измерений</p>
+                </div>
+            </div>
+            <div class="user-actions">
+                <div class="user-profile">
+                    <div class="user-avatar">--</div>
+                    <div class="user-info">
+                        <span class="user-name">Загрузка...</span>
+                        <span class="user-role">...</span>
+                    </div>
+                </div>
+
+                <a href="/dashboard" title="Вернуться на дашборд" class="logout-button back-to-dashboard">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Вкладки с видами измерений -->
+        <div class="measurement-tabs">
+            <button class="tab-btn" data-tab="temperature">
+                <!-- Температура: простой термометр, единый цвет через currentColor -->
+                <svg class="main-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M14 14V6a2 2 0 10-4 0v8a4 4 0 104 0z" fill="currentColor"/>
+                </svg>
+                Температура
+            </button>
+            <button class="tab-btn" data-tab="flow">
+                <!-- Расход: капли (основная + маленькая) один цвет -->
+                <svg class="main-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 3c-2.8 5-6 7.6-6 11a6 6 0 0012 0c0-3.4-3.2-6-6-11z" fill="currentColor"/>
+                    <path d="M18.5 6.5c-1.3 2.3-2.5 3.4-2.5 5a2.5 2.5 0 005 0c0-1.6-1.2-2.7-2.5-5z" fill="currentColor" opacity="0.8"/>
+                </svg>
+                Расход
+            </button>
+            <button class="tab-btn" data-tab="physchem">
+                <!-- Физхимия: колба, единый цвет -->
+                <svg class="main-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M9 3h6v2l-2 3v4a4 4 0 11-4 0V8L9 5V3z" fill="currentColor"/>
+                </svg>
+                Физхимия
+            </button>
+            <button class="tab-btn" data-tab="pressure">
+                <!-- Давление: манометр с указателем, stroke через currentColor -->
+                <svg class="main-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M12 12l3.8-3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="1.6" fill="currentColor"/>
+                </svg>
+                Давление
+            </button>
+            <button class="tab-btn" data-tab="mechanics">
+                <i class="fas fa-cog"></i>
+                Механика
+            </button>
+        </div>
+
+        <!-- Контент вкладок: каждая вкладка теперь содержит под-вкладки -->
+    <div class="tab-content" id="temperature">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" data-sub="temp-calculator-select">Выбор калькулятора</button>
+                <button class="sub-tab-btn" data-sub="temp-docs">Нормативная документация</button>
+            </div>
+            <div class="sub-tab-content active" id="temp-calculator-select">
+                <div class="calculator-selector">
+                    <h4>Выберите тип калькулятора:</h4>
+                    <div class="selector-buttons">
+                        <button class="selector-btn active" onclick="showCalculator('kelvin')">
+                            <i class="fas fa-thermometer-half"></i>
+                            <span>Кельвин ↔ Цельсий</span>
+                        </button>
+                        <button class="selector-btn" onclick="showCalculator('nsx')">
+                            <span class="nsx-icon">Ω ⇄ °C</span>
+                            <span>НСХ (ГОСТ 6651-2009)</span>
+                        </button>
+                        <button class="selector-btn" onclick="showCalculator('thermocouple')">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Термопара (ГОСТ 8.585-2001)</span>
+                        </button>
+                    </div>
+
+                    <!-- Калькулятор 1: Кельвин ↔ Цельсий -->
+                    <div class="calc-container active" id="calc-kelvin">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3><i class="fas fa-thermometer-half"></i> Кельвин ↔ Цельсий</h3>
+                                <div class="calc-dual-input">
+                                    <div class="calc-group">
+                                        <label>Кельвины (K):</label>
+                                        <input type="number" id="kelvin-input" placeholder="273.15" step="0.01" oninput="autoConvertTemperature('kelvin')">
+                                    </div>
+                                    <div class="calc-arrow">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Цельсии (°C):</label>
+                                        <input type="number" id="celsius-input" placeholder="0" step="0.01" oninput="autoConvertTemperature('celsius')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 2: НСХ (ГОСТ 6651-2009) -->
+                    <div class="calc-container" id="calc-nsx">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3><span class="nsx-icon-title">Ω ⇄ °C</span> НСХ (ГОСТ 6651-2009) — Термосопротивления</h3>
+                                <div class="calc-inputs">
+                                    <div class="calc-group">
+                                        <label>Тип НСХ:</label>
+                                        <select id="nsx-type" onchange="updateNSXInfo()">
+                                            <optgroup label="Платиновые (IEC 60751)">
+                                                <option value="pt100">Pt100 (ПТ100) — R₀=100 Ω</option>
+                                                <option value="pt500">Pt500 (ПТ500) — R₀=500 Ω</option>
+                                                <option value="pt1000">Pt1000 (ПТ1000) — R₀=1000 Ω</option>
+                                            </optgroup>
+                                            <optgroup label="Платиновые (ГОСТ 6651-2009)">
+                                                <option value="100p">100П — R₀=100 Ω (ГОСТ)</option>
+                                                <option value="500p">500П — R₀=500 Ω (ГОСТ)</option>
+                                            </optgroup>
+                                            <optgroup label="Медные">
+                                                <option value="50m">50М — R₀=50 Ω (медь)</option>
+                                                <option value="100m">100М — R₀=100 Ω (медь)</option>
+                                            </optgroup>
+                                            <optgroup label="Никелевые">
+                                                <option value="50n">50Н — R₀=50 Ω (никель)</option>
+                                                <option value="100n">100Н — R₀=100 Ω (никель)</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Класс точности:</label>
+                                        <select id="nsx-class" onchange="recalculateNSXOnClassChange()">
+                                            <option value="a">Класс A (допуск ±(0.15+0.002|t|))</option>
+                                            <option value="b" selected>Класс B (допуск ±(0.30+0.005|t|))</option>
+                                            <option value="c">Класс C (допуск ±(0.60+0.010|t|))</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="calc-divider">
+                                <div class="calc-dual-input">
+                                    <div class="calc-group">
+                                        <label>Сопротивление (Ω):</label>
+                                        <input type="number" id="nsx-resistance" placeholder="100" step="0.01" oninput="autoConvertNSX('resistance')">
+                                    </div>
+                                    <div class="calc-arrow">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Температура (°C):</label>
+                                        <input type="number" id="nsx-temp" placeholder="0" step="0.1" oninput="autoConvertNSX('temp')">
+                                    </div>
+                                </div>
+                                <div class="calc-info">
+                                    <small id="nsx-info">Выберите тип НСХ для расчётов</small>
+                                </div>
+                                <div class="calc-results" style="margin-top: 16px;">
+                                    <div class="result-row">
+                                        <span>Диапазон измерений:</span>
+                                        <strong id="nsx-range">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Температурный коэффициент:</span>
+                                        <strong id="nsx-coefficient">—</strong>
+                                    </div>
+                                    <div class="result-row" style="border-top: 1px solid rgba(0,0,0,0.08); margin-top: 12px; padding-top: 12px;">
+                                        <span>Погрешность при данной t:</span>
+                                        <strong id="nsx-error-temp">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Погрешность в сопротивлении:</span>
+                                        <strong id="nsx-error-resistance">—</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 3: Термопара -->
+                    <div class="calc-container" id="calc-thermocouple">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3>
+                                    <span class="tc-icon">
+                                        <span class="tc-icon-title">mV ⇄ °C</span>
+                                    </span>
+                                    Термопара (ГОСТ 8.585-2001)
+                                </h3>
+                                <div class="calc-inputs">
+                                    <div class="calc-group">
+                                        <label>Тип термопары:</label>
+                                        <select id="tc-type" onchange="updateTCInfo()">
+                                            <optgroup label="Платинородиевые">
+                                                <option value="s">S (ТПП) — PtRh10-Pt, 0...+1768°C</option>
+                                                <option value="r">R (ТПР) — PtRh13-Pt, 0...+1768°C</option>
+                                                <option value="b">B (ТПР) — PtRh30-PtRh6, +300...+1820°C</option>
+                                            </optgroup>
+                                            <optgroup label="Неблагородные">
+                                                <option value="k">K (ТХА) — Хромель-Алюмель, -200...+1300°C</option>
+                                                <option value="n">N (ТХН) — Хромель-Нихросил, -200...+1300°C</option>
+                                                <option value="j">J (ТЖК) — Железо-Константан, -40...+750°C</option>
+                                                <option value="t">T (ТМК) — Медь-Константан, -200...+350°C</option>
+                                                <option value="e">E (ТХК) — Хромель-Копель, -200...+900°C</option>
+                                                <option value="l">L (ТХК) — Хромель-Копель, -200...+800°C</option>
+                                                <option value="m">M (ТМК) — Никель-Нихросил, 0...+1300°C</option>
+                                            </optgroup>
+                                            <optgroup label="Вольфрам-рениевые">
+                                                <option value="a1">A-1 (ТВР) — W-Re5/W-Re20, 0...+2500°C</option>
+                                                <option value="a2">A-2 (ТВР) — W-Re3/W-Re25, 0...+2500°C</option>
+                                                <option value="a3">A-3 (ТВР) — W-Re5/W-Re5, 0...+2200°C</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Класс допуска:</label>
+                                        <select id="tc-class" onchange="recalculateTCOnClassChange()">
+                                            <option value="1">Класс 1 (повышенная точность)</option>
+                                            <option value="2" selected>Класс 2 (стандартная точность)</option>
+                                            <option value="3">Класс 3 (промышленная)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="calc-divider">
+                                <div class="calc-dual-input">
+                                    <div class="calc-group">
+                                        <label>ЭДС (мВ):</label>
+                                        <input type="number" id="tc-emf" placeholder="0" step="0.01" oninput="autoConvertTC('emf')">
+                                    </div>
+                                    <div class="calc-arrow">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Температура (°C):</label>
+                                        <input type="number" id="tc-temp" placeholder="0" step="0.1" oninput="autoConvertTC('temp')">
+                                    </div>
+                                </div>
+                                <div class="calc-info">
+                                    <small id="tc-info">Выберите тип термопары для расчётов</small>
+                                </div>
+                                <div class="calc-results" style="margin-top: 16px;">
+                                    <div class="result-row">
+                                        <span>Диапазон измерений:</span>
+                                        <strong id="tc-range">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Коэффициент Зеебека:</span>
+                                        <strong id="tc-seebeck">—</strong>
+                                    </div>
+                                    <div class="result-row" style="border-top: 1px solid rgba(0,0,0,0.08); margin-top: 12px; padding-top: 12px;">
+                                        <span>Погрешность при данной t:</span>
+                                        <strong id="tc-error-temp">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Погрешность в ЭДС:</span>
+                                        <strong id="tc-error-emf">—</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-tab-content" id="temp-docs">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h3>Методика поверки термометров</h3>
+                            <p>МП 207-021-2019</p>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="tab-content active" id="flow">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn" data-sub="flow-calculator-select">
+                    <!-- Расходомер SVG -->
+                    <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h10" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/><path d="M13 12l3-3v6l-3-3z" fill="#2563eb"/><path d="M20 6v12" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    Выбор калькулятора
+                </button>
+                <button class="sub-tab-btn" data-sub="flow-docs">Нормативная документация</button>
+            </div>
+            <div class="sub-tab-content" id="flow-calculator-select">
+                <div class="calculator-selector">
+                    <h4>Выберите тип калькулятора:</h4>
+                    <div class="selector-buttons">
+                        <button class="selector-btn active" onclick="showFlowCalculator('converter')">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Конвертер единиц</span>
+                        </button>
+                        <button class="selector-btn" onclick="showFlowCalculator('flow-to-velocity')">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Расход → Скорость</span>
+                        </button>
+                        <button class="selector-btn" onclick="showFlowCalculator('pipe-flow')">
+                            <i class="fas fa-fire"></i>
+                            <span>Расчёт энтальпии (ГОСТ Р ЕН 1434-5-2011)</span>
+                        </button>
+                    </div>
+
+                    <!-- Контейнер для калькуляторов -->
+                    <div class="calculators-wrapper">
+                    <!-- Калькулятор 1: Конвертер единиц -->
+                    <div class="calc-container active" id="calc-flow-converter">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3><i class="fas fa-exchange-alt"></i> Конвертер единиц измерения</h3>
+                                <div class="calc-inputs">
+                                    <div class="calc-group">
+                                        <label>Тип величины:</label>
+                                        <select id="converter-type" onchange="updateConverterUnits()">
+                                            <option value="volume">Объём</option>
+                                            <option value="volumetric-flow">Объёмный расход</option>
+                                            <option value="mass-flow">Массовый расход</option>
+                                            <option value="density">Плотность</option>
+                                            <option value="thermal-energy">Теплоэнергия</option>
+                                            <option value="velocity">Скорость потока</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <hr class="calc-divider">
+                                <div class="calc-dual-input">
+                                    <div class="calc-group">
+                                        <label>Из:</label>
+                                        <select id="converter-from-unit" onchange="autoConvertUnits('from')">
+                                            <option value="m3">м³ (куб. метр)</option>
+                                        </select>
+                                        <input type="number" id="converter-from-value" placeholder="0" step="any" oninput="autoConvertUnits('from')">
+                                    </div>
+                                    <div class="calc-arrow">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>В:</label>
+                                        <select id="converter-to-unit" onchange="autoConvertUnits('to')">
+                                            <option value="l">л (литр)</option>
+                                        </select>
+                                        <input type="number" id="converter-to-value" placeholder="0" step="any" oninput="autoConvertUnits('to')">
+                                    </div>
+                                </div>
+                                <div class="calc-info">
+                                    <small id="converter-info">Выберите тип величины для конвертации</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 2: Пересчёт объёмного расхода в скорость потока -->
+                    <div class="calc-container" id="calc-flow-to-velocity">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3><i class="fas fa-tachometer-alt"></i> Пересчёт объёмного расхода в скорость потока</h3>
+                                <div class="calc-inputs">
+                                    <div class="calc-group">
+                                        <label>Внутренний диаметр трубы (мм):</label>
+                                        <input type="number" id="pipe-diameter" placeholder="100" step="0.1" oninput="autoConvertFlowVelocity('diameter')">
+                                    </div>
+                                </div>
+                                <hr class="calc-divider">
+                                <div class="calc-dual-input">
+                                    <div class="calc-group">
+                                        <label>Объёмный расход (м³/ч):</label>
+                                        <input type="number" id="volumetric-flow" placeholder="10" step="0.01" oninput="autoConvertFlowVelocity('flow')">
+                                    </div>
+                                    <div class="calc-arrow">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Скорость потока (м/с):</label>
+                                        <input type="number" id="flow-velocity" placeholder="0" step="0.001" oninput="autoConvertFlowVelocity('velocity')">
+                                    </div>
+                                </div>
+                                <div class="calc-results" style="margin-top: 16px;">
+                                    <div class="result-row">
+                                        <span>Площадь сечения трубы:</span>
+                                        <strong id="pipe-area">—</strong>
+                                    </div>
+                                </div>
+                                <div class="calc-info">
+                                    <small>Формула: v = Q / A, где Q — объёмный расход, A = π·d²/4 — площадь сечения</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 3: Расчёт энтальпии (ГОСТ Р ЕН 1434-5-2011) -->
+                    <div class="calc-container" id="calc-pipe-flow">
+                        <div class="calc-compact">
+                            <div class="calculator-card-compact">
+                                <h3><i class="fas fa-fire"></i> Расчёт энтальпии воды (ГОСТ Р ЕН 1434-5-2011)</h3>
+                                <div class="calc-inputs">
+                                    <div class="calc-group">
+                                        <label>Температура воды (°C):</label>
+                                        <input type="number" id="enthalpy-temp" placeholder="20" step="0.1" min="0.01" max="180" oninput="calculateEnthalpy()">
+                                    </div>
+                                    <div class="calc-group">
+                                        <label>Давление (МПа):</label>
+                                        <input type="number" id="enthalpy-pressure" placeholder="0.6" step="0.01" min="0" max="2.5" oninput="calculateEnthalpy()">
+                                    </div>
+                                </div>
+                                <hr class="calc-divider">
+                                <div class="calc-results">
+                                    <div class="result-row">
+                                        <span>Энтальпия (h):</span>
+                                        <strong id="enthalpy-value">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Плотность (ρ):</span>
+                                        <strong id="density-value">—</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Диапазон температур:</span>
+                                        <strong>0.01 ... 180 °C</strong>
+                                    </div>
+                                    <div class="result-row">
+                                        <span>Диапазон давлений:</span>
+                                        <strong>0 ... 2.5 МПа</strong>
+                                    </div>
+                                </div>
+                                <div class="calc-info">
+                                    <small>Расчёт энтальпии воды согласно ГОСТ Р ЕН 1434-5-2011 (Теплосчётчики). Формула: h = f(T, P)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-tab-content" id="flow-docs">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h3>Методика поверки расходомеров</h3>
+                            <p>МП 208-024-2019</p>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="physchem">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" data-sub="ph-calc">Калькулятор</button>
+                <button class="sub-tab-btn" data-sub="ph-docs">Нормативная документация</button>
+            </div>
+            <div class="sub-tab-content active" id="ph-calc">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="doc-info">
+                            <h3>Калькулятор pH и коррекций</h3>
+                            <p>Инструмент для обработки результатов измерений.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-tab-content" id="ph-docs">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h3>Методика измерений pH</h3>
+                            <p>МИ 205-018-2020</p>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="pressure">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" data-sub="pres-calc">
+                    <!-- Манометр SVG -->
+                    <svg class="icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#2563eb" stroke-width="1.6"/><path d="M12 12l4-4" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    Калькулятор
+                </button>
+                <button class="sub-tab-btn" data-sub="pres-docs">Нормативная документация</button>
+            </div>
+            <div class="sub-tab-content active" id="pres-calc">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="doc-info">
+                            <h3>Калькулятор давления</h3>
+                            <p>Инструмент для пересчёта единиц и поправок.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-tab-content" id="pres-docs">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h3>Поверка манометров</h3>
+                            <p>МП 202-015-2019</p>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="mechanics">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" data-sub="mech-calc">Калькулятор</button>
+                <button class="sub-tab-btn" data-sub="mech-docs">Нормативная документация</button>
+            </div>
+            <div class="sub-tab-content active" id="mech-calc">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="doc-info">
+                            <h3>Калькулятор механических параметров</h3>
+                            <p>Расчёт допусков и погрешностей.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-tab-content" id="mech-docs">
+                <div class="content-grid">
+                    <div class="doc-card">
+                        <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="doc-info">
+                            <h3>Поверка весов</h3>
+                            <p>МП 201-012-2019</p>
+                        </div>
+                        <a href="#" class="doc-download"><i class="fas fa-download"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="/js/utils/global-toaster.js"></script>
+    <script src="/js/help/help.js"></script>
+</body>
+</html>

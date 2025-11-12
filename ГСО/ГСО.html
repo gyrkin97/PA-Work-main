@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>База стандартных образцов</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === БАЗОВЫЕ ПЕРЕМЕННЫЕ === */
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-dark: #1d4ed8;
+            --secondary-color: #6c757d;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #dc3545;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --glass-effect: rgba(255,255,255,0.9);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(-45deg, #f8fafc, #f9fbff, #f7f9fc, #fafdff);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            background-attachment: fixed;
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        /* === УНИФИЦИРОВАННАЯ ШАПКА === */
+        .new-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .logo-text p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: var(--glass-effect);
+            cursor: default;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .logout-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logout-button:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* === ПАНЕЛЬ УПРАВЛЕНИЯ === */
+        .controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* === КНОПКИ === */
+        button {
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border: none;
+            outline: none;
+            font-family: inherit;
+        }
+
+        #add-sample-btn, .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #add-sample-btn:hover, .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-box input {
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+            width: 300px;
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* === ТАБЛИЦА === */
+        .table-container {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        thead th {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: white;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        thead th:first-child,
+        thead th:last-child {
+            text-align: left;
+        }
+
+        tbody tr {
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        tbody tr:not(.group-header):hover {
+            background-color: #f8fafc;
+        }
+
+        /* === ЯЧЕЙКИ СРОКА ГОДНОСТИ === */
+        .expiry-cell {
+            position: relative;
+            padding: 8px !important;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .expiry-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            border-radius: 8px;
+            min-height: 60px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .expiry-ok .expiry-content {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        .expiry-warning .expiry-content {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+
+        .expiry-expired .expiry-content {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            color: #991b1b;
+        }
+
+        .expiry-status {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* === ЯЧЕЙКИ ПОГРЕШНОСТИ === */
+        .clickable-error {
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+            border-radius: 6px;
+            padding: 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60px;
+            background-color: #f8f9fa;
+        }
+
+        .clickable-error:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .error-type {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* === КНОПКИ ДЕЙСТВИЙ === */
+        .action-cell {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            min-height: 60px;
+            justify-content: center;
+            padding: 8px 0 !important;
+        }
+
+        .action-button {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 8px;
+            font-size: 16px;
+            color: #6c757d;
+            transition: var(--transition);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .action-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .action-button.view:hover {
+            background: #e7f3ff;
+            border-color: #b3d9ff;
+            color: #0066cc;
+        }
+
+        .action-button.edit:hover {
+            background: #fff9e6;
+            border-color: #ffe680;
+            color: #cc9900;
+        }
+
+        .action-button.passport:hover {
+            background: #e6fff2;
+            border-color: #80ffbf;
+            color: #00cc66;
+        }
+
+        .action-button.delete:hover {
+            background: #ffe6e6;
+            border-color: #ff8080;
+            color: #cc0000;
+        }
+
+        .action-button:disabled {
+            background: #f8f9fa;
+            color: #ced4da;
+            border-color: #e9ecef;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .action-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* === ЗАГОЛОВКИ ГРУПП === */
+        .group-header td {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            font-weight: 700;
+            color: var(--primary-blue-dark);
+            border-top: 2px solid #93c5fd;
+            border-bottom: 2px solid #93c5fd;
+            font-size: 16px;
+            padding: 14px 20px;
+            position: relative;
+        }
+
+        .group-header td::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-blue);
+        }
+
+        /* --- Стили Модальных окон --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 0;
+            border: none;
+            width: 85%;
+            max-width: 800px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: none;
+            padding: 24px 32px;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: white;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: white;
+            font-weight: 600;
+            font-size: 22px;
+        }
+
+        .close-btn {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transform-origin: center;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal-body {
+            padding: 32px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .modal-body form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .modal-body fieldset {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: rgba(248, 249, 250, 0.5);
+            transition: var(--transition);
+        }
+
+        .modal-body fieldset:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-body legend {
+            font-weight: 600;
+            color: var(--primary-blue);
+            padding: 0 12px;
+            margin-left: 10px;
+            font-size: 16px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 20px 32px;
+            border-top: 1px solid #e5e7eb;
+            background: #f8f9fa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-input-group input[type="text"] {
+            flex-grow: 1;
+        }
+
+        .file-input-group input[type="file"] {
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .action-btn svg {
+            width: 50%;
+            height: 50%;
+            fill: white;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--success-color), #34ce57);
+        }
+
+        .btn-add:hover {
+            background: linear-gradient(135deg, #218838, var(--success-color));
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--info-color), #1fc8e3);
+        }
+
+        .btn-view:hover {
+            background: linear-gradient(135deg, #138496, var(--info-color));
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, var(--danger-color), #e4606d);
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #c82333, var(--danger-color));
+        }
+
+        .input-with-unit, .classifier-group, .pressure-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-with-unit select {
+            flex: 0 0 120px;
+        }
+
+        .error-section-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px 20px;
+            align-items: center;
+            background: rgba(0,0,0,0.02);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .error-section-grid .grid-title {
+            grid-column: 1 / -1;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .error-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .error-input-group label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            width: 60px;
+            font-weight: normal;
+        }
+
+        .calc-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #868e96);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(108,117,125,0.3);
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108,117,125,0.4);
+            background: linear-gradient(135deg, #5a6268, var(--secondary-color));
+        }
+
+        .location-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .location-btn {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .location-btn.in-lab {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        .location-btn.on-site {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+        }
+
+        .location-btn.active {
+            font-weight: 600;
+            box-shadow: 0 0 0 2px var(--primary-blue), 0 4px 8px rgba(37, 99, 235, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .view-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(248,249,250,0.5);
+            transition: var(--transition);
+        }
+
+        .view-block:hover {
+            background: rgba(248,249,250,0.8);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .view-block h4 {
+            margin: 0 0 12px 0;
+            font-size: 17px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .view-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .view-item:last-child {
+            border-bottom: none;
+        }
+
+        .view-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 14px;
+        }
+
+        .view-data {
+            color: #000;
+        }
+
+        /* Дополнительные интерактивные элементы */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -8px); }
+            100% { transform: translate(0, 0px); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .controls-container {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-info {
+                align-self: flex-start;
+            }
+
+            .modal-body fieldset {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Новая унифицированная шапка как в других модулях -->
+        <header class="new-header">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-flask"></i></div>
+                <div class="logo-text">
+                    <h1>База стандартных образцов</h1>
+                    <p>Учет и управление ГСО</p>
+                </div>
+            </div>
+            <div class="user-actions">
+                <div class="user-profile">
+                    <div class="user-avatar"><span>...</span></div>
+                    <div class="user-info">
+                        <span class="user-name">Загрузка...</span>
+                        <span class="user-role">...</span>
+                    </div>
+                </div>
+                <a href="/dashboard" title="Вернуться на дашборд" class="logout-button">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        </header>
+
+        <div class="controls-container">
+            <button id="add-sample-btn">Добавить новый образец</button>
+            <div class="search-box">
+                <input type="text" placeholder="Поиск...">
+                <button type="button" class="btn-primary">Найти</button>
+            </div>
+        </div>
+
+        <main>
+             <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>№ п/п</th>
+                            <th>ГРСО и наименование</th>
+                            <th>Концентрация</th>
+                            <th>Погрешность</th>
+                            <th>Срок годности</th>
+                            <th>Местонахождение</th>
+                            <th>Примечание</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="samples-table-body"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Остальной код без изменений -->
+    <!-- Модальное окно Добавления/Редактирования -->
+    <div id="add-sample-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Добавить новый образец</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="add-sample-form">
+                    <div class="form-group full-width">
+                        <label for="sample-department">Принадлежность</label>
+                        <select id="sample-department" name="department">
+                            <option>Тюменский отдел метрологии</option>
+                            <option>Уфимский отдел метрологии</option>
+                        </select>
+                    </div>
+                    <fieldset>
+                        <legend>Основные данные</legend>
+                        <div class="form-group">
+                            <label for="sample-grso">ГРСО</label>
+                            <input type="text" id="sample-grso" name="grso" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sample-grade">Разряд</label>
+                            <select id="sample-grade" name="grade">
+                                <option>0 разряд</option>
+                                <option>1 разряд</option>
+                                <option>2 разряд</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="sample-name">Наименование СО</label>
+                            <input type="text" id="sample-name" name="name" placeholder="Например: Метан в азоте" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Классификатор</label>
+                            <div class="classifier-group">
+                                <select id="classifier-component" name="component">
+                                    <option>Метан</option>
+                                    <option>Оксид углерода</option>
+                                    <option>Пропан</option>
+                                    <option>Бутан</option>
+                                    <option>Изобутилен</option>
+                                    <option>Кислород</option>
+                                    <option>Диоксид азота</option>
+                                    <option>Оксид азота</option>
+                                    <option>Диоксид серы</option>
+                                    <option>ИПГ</option>
+                                    <option>другое</option>
+                                </select>
+                                <select id="classifier-matrix" name="matrix">
+                                    <option>в азоте</option>
+                                    <option>в воздухе</option>
+                                    <option>в аргоне</option>
+                                    <option>в гелии</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Идентификационные данные</legend>
+                        <div class="form-group">
+                            <label for="cylinder-num">№ баллона</label>
+                            <input type="text" id="cylinder-num" name="cylinderNum">
+                        </div>
+                        <div class="form-group">
+                            <label for="inventory-num">Инвентарный №</label>
+                            <input type="text" id="inventory-num" name="inventoryNum">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="passport-num">№ паспорта (партии)</label>
+                            <div class="file-input-group">
+                                <input type="text" id="passport-num" name="passportNum" placeholder="Номер документа" required>
+                                <input type="file" id="passport-file-input" name="passportFile-input">
+                                <div class="action-buttons">
+                                    <button type="button" id="passport-add-btn" class="action-btn btn-add" title="Добавить PDF">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" id="passport-view-btn" class="action-btn btn-view hidden" title="Просмотреть файл">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 10c-2.48 0-4.5-2.02-4.5-4.5S9.52 5.5 12 5.5s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5zm0-7C10.62 7.5 9.5 8.62 9.5 10s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5S13.38 7.5 12 7.5z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" id="passport-delete-btn" class="action-btn btn-delete hidden" title="Удалить файл">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="invoice-num">Счет-фактура</label>
+                            <div class="file-input-group">
+                                <input type="text" id="invoice-num" name="invoiceNum" placeholder="Номер счет-фактуры">
+                                <input type="file" id="invoice-file-input" name="invoiceFile-input">
+                                <div class="action-buttons">
+                                    <button type="button" id="invoice-add-btn" class="action-btn btn-add" title="Добавить PDF">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" id="invoice-view-btn" class="action-btn btn-view hidden" title="Просмотреть файл">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 10c-2.48 0-4.5-2.02-4.5-4.5S9.52 5.5 12 5.5s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5zm0-7C10.62 7.5 9.5 8.62 9.5 10s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5S13.38 7.5 12 7.5z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" id="invoice-delete-btn" class="action-btn btn-delete hidden" title="Удалить файл">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Метрологические характеристики</legend>
+                        <div class="form-group full-width">
+                            <label>Значение содержания</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="component-value" name="concentration" step="any" required>
+                                <select id="component-unit" name="concentrationUnit">
+                                    <option>% об.д.</option>
+                                    <option>мг/м³</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="error-section-grid">
+                            <label class="grid-title">Значение погрешности</label>
+                            <div class="error-input-group">
+                                <label for="error-abs">абс.</label>
+                                <input type="number" id="error-abs" name="errorAbs" step="any">
+                            </div>
+                            <button type="button" id="calc-abs-btn" class="calc-btn">Рассчитать абс.</button>
+                            <div class="error-input-group">
+                                <label for="error-rel">отн. (%)</label>
+                                <input type="number" id="error-rel" name="errorRel" step="any">
+                            </div>
+                            <button type="button" id="calc-rel-btn" class="calc-btn">Рассчитать отн.</button>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Остальное</legend>
+                        <div class="form-group">
+                            <label for="mfg-date">Дата изготовления</label>
+                            <input type="date" id="mfg-date" name="mfgDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="exp-date">Срок годности</label>
+                            <input type="date" id="exp-date" name="expiryDate">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="pressure-value">Замер давления (МПа)</label>
+                            <div class="pressure-group">
+                                <input type="number" id="pressure-value" name="pressureValue" step="any" placeholder="Давление">
+                                <input type="date" id="pressure-date" name="pressureDate">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Местонахождение</label>
+                            <div class="location-btn-group">
+                                <button type="button" class="location-btn in-lab" data-location="lab">В лаборатории</button>
+                                <button type="button" class="location-btn on-site" data-location="site">На выезде</button>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="notes">Примечание</label>
+                            <textarea id="notes" name="notes" rows="3"></textarea>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancel-btn">Отмена</button>
+                <button type="submit" class="btn-primary" id="modal-submit-btn" form="add-sample-form">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно Просмотра -->
+    <div id="view-sample-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Паспорт образца</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="view-block">
+                    <h4>Основные данные</h4>
+                    <div class="view-item">
+                        <div class="view-label">Принадлежность:</div>
+                        <div id="view-department" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">ГРСО:</div>
+                        <div id="view-grso" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Наименование:</div>
+                        <div id="view-name" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Разряд:</div>
+                        <div id="view-grade" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Классификатор:</div>
+                        <div id="view-classifier" class="view-data"></div>
+                    </div>
+                </div>
+                <div class="view-block">
+                    <h4>Идентификационные данные</h4>
+                    <div class="view-item">
+                        <div class="view-label">№ баллона:</div>
+                        <div id="view-cylinderNum" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Инвентарный №:</div>
+                        <div id="view-inventoryNum" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">№ паспорта:</div>
+                        <div id="view-passportNum" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Счет-фактура:</div>
+                        <div id="view-invoiceNum" class="view-data"></div>
+                    </div>
+                </div>
+                <div class="view-block">
+                    <h4>Метрологические характеристики</h4>
+                    <div class="view-item">
+                        <div class="view-label">Концентрация:</div>
+                        <div id="view-concentration" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Погрешность (абс):</div>
+                        <div id="view-errorAbs" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Погрешность (отн):</div>
+                        <div id="view-errorRel" class="view-data"></div>
+                    </div>
+                </div>
+                 <div class="view-block">
+                    <h4>Остальное</h4>
+                    <div class="view-item">
+                        <div class="view-label">Дата изготовления:</div>
+                        <div id="view-mfgDate" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Срок годности:</div>
+                        <div id="view-expiryDate" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Замер давления:</div>
+                        <div id="view-pressure" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Местонахождение:</div>
+                        <div id="view-location" class="view-data"></div>
+                    </div>
+                    <div class="view-item">
+                        <div class="view-label">Примечание:</div>
+                        <div id="view-notes" class="view-data"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="view-close-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('add-sample-modal');
+            const viewModal = document.getElementById('view-sample-modal');
+            const addSampleBtn = document.getElementById('add-sample-btn');
+            const closeBtns = document.querySelectorAll('.close-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const viewCloseBtn = document.getElementById('view-close-btn');
+            const form = document.getElementById('add-sample-form');
+            const tableBody = document.getElementById('samples-table-body');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubmitBtn = document.getElementById('modal-submit-btn');
+            let editingIndex = null;
+
+            let sampleData = [
+                { department: 'Тюменский отдел метрологии', grso: '11455-2019', grade: '1 разряд', name: 'Метан в азоте', component: 'Метан', matrix: 'в азоте', cylinderNum: '12345', inventoryNum: 'INV-001', passportNum: 'P-555', invoiceNum: 'I-555', concentration: '1.05', concentrationUnit: '% об.д.', errorAbs: '0.02', errorRel: '1.9', mfgDate: '2023-01-15', expiryDate: '2026-12-01', pressureValue: '10', pressureDate: '2024-05-01', location: 'В лаборатории', notes: 'Основной образец', passportFile: null, invoiceFile: null, displayErrorType: 'abs' },
+                { department: 'Тюменский отдел метрологии', grso: '10113-2012', grade: '0 разряд', name: 'Оксид углерода в азоте', component: 'Оксид углерода', matrix: 'в азоте', cylinderNum: '67890', inventoryNum: 'INV-002', passportNum: 'P-666', invoiceNum: 'I-666', concentration: '0.5', concentrationUnit: '% об.д.', errorAbs: '0.01', errorRel: '2.0', mfgDate: '2023-02-20', expiryDate: getFutureDate(30), pressureValue: '9.5', pressureDate: '2024-05-10', location: 'В лаборатории', notes: '', passportFile: null, invoiceFile: null, displayErrorType: 'abs' },
+            ];
+
+            const openModal = (m) => m.classList.add('active');
+            const closeModal = (m) => m.classList.remove('active');
+
+            addSampleBtn.addEventListener('click', () => {
+                editingIndex = null;
+                modalTitle.textContent = 'Добавить новый образец';
+                modalSubmitBtn.textContent = 'Сохранить';
+                form.reset();
+                resetFileInputs('passport'); resetFileInputs('invoice');
+                document.querySelectorAll('.location-btn').forEach(btn => btn.classList.remove('active'));
+                openModal(modal);
+            });
+            
+            closeBtns.forEach(btn => { btn.addEventListener('click', () => { closeModal(modal); closeModal(viewModal); }); });
+            cancelBtn.addEventListener('click', () => closeModal(modal));
+            viewCloseBtn.addEventListener('click', () => closeModal(viewModal));
+            window.addEventListener('click', (event) => { if (event.target === modal) closeModal(modal); if (event.target === viewModal) closeModal(viewModal);});
+
+            tableBody.addEventListener('click', (event) => {
+                const button = event.target.closest('.action-button');
+                const errorCell = event.target.closest('.clickable-error');
+
+                if (button) {
+                    const index = button.dataset.index;
+                    const sample = sampleData[index];
+                    if (button.classList.contains('delete')) {
+                        if (confirm(`Удалить "${sample.name}"?`)) { sampleData.splice(index, 1); renderTable(); }
+                    } else if (button.classList.contains('edit')) {
+                        editingIndex = index;
+                        modalTitle.textContent = 'Редактирование образца';
+                        modalSubmitBtn.textContent = 'Сохранить изменения';
+                        for (const key in sample) { if (form.elements[key]) { form.elements[key].value = sample[key] || ''; } }
+                        document.querySelectorAll('.location-btn').forEach(btn => btn.classList.toggle('active', btn.textContent === sample.location));
+                        updateFileUI('passport', !!sample.passportFile);
+                        updateFileUI('invoice', !!sample.invoiceFile);
+                        openModal(modal);
+                    } else if (button.classList.contains('view')) {
+                        const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString('ru-RU') : '-';
+                        for (const key in sample) { const viewElement = document.getElementById(`view-${key}`); if (viewElement) viewElement.textContent = sample[key] || '-'; }
+                        document.getElementById('view-classifier').textContent = `${sample.component || ''} ${sample.matrix || ''}`;
+                        document.getElementById('view-concentration').textContent = `${sample.concentration || '-'} ${sample.concentrationUnit || ''}`;
+                        document.getElementById('view-errorAbs').textContent = sample.errorAbs ? `± ${sample.errorAbs}` : '-';
+                        document.getElementById('view-errorRel').textContent = sample.errorRel ? `± ${sample.errorRel} %` : '-';
+                        document.getElementById('view-pressure').textContent = sample.pressureValue ? `${sample.pressureValue} МПа (от ${formatDate(sample.pressureDate)})` : '-';
+                        document.getElementById('view-mfgDate').textContent = formatDate(sample.mfgDate);
+                        document.getElementById('view-expiryDate').textContent = formatDate(sample.expiryDate);
+                        openModal(viewModal);
+                    } else if (button.classList.contains('passport')) {
+                        if (sample.passportFile) window.open(URL.createObjectURL(sample.passportFile), '_blank');
+                    }
+                } else if (errorCell) {
+                    const index = errorCell.dataset.index;
+                    const sample = sampleData[index];
+                    sample.displayErrorType = (sample.displayErrorType === 'abs') ? 'rel' : 'abs';
+                    renderTable();
+                }
+            });
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const formData = {};
+                const formElements = form.elements;
+                for (const element of formElements) { if (element.name) formData[element.name] = element.value; }
+                formData.location = document.querySelector('.location-btn.active')?.textContent || '';
+                formData.passportFile = form['passportFile-input'].files[0] || (editingIndex !== null ? sampleData[editingIndex].passportFile : null);
+                formData.invoiceFile = form['invoiceFile-input'].files[0] || (editingIndex !== null ? sampleData[editingIndex].invoiceFile : null);
+                if (editingIndex !== null) {
+                    formData.displayErrorType = sampleData[editingIndex].displayErrorType;
+                    sampleData[editingIndex] = formData;
+                } else {
+                    formData.displayErrorType = 'abs';
+                    sampleData.push(formData);
+                }
+                renderTable();
+                closeModal(modal);
+            });
+            
+            document.getElementById('calc-abs-btn').addEventListener('click', () => { const y = parseFloat(form['concentration'].value), z = parseFloat(form['errorRel'].value); if (!isNaN(y) && !isNaN(z)) form['errorAbs'].value = (y * (z / 100)).toPrecision(4); else alert('Введите "Значение содержания" и "отн. погрешность".'); });
+            document.getElementById('calc-rel-btn').addEventListener('click', () => { const c = parseFloat(form['concentration'].value), b = parseFloat(form['errorAbs'].value); if (!isNaN(c) && !isNaN(b)) { if (c === 0) { alert('Значение содержания не может быть 0.'); return; } form['errorRel'].value = ((b / c) * 100).toPrecision(4); } else alert('Введите "Значение содержания" и "абс. погрешность".'); });
+            
+            function setupFileInput(type) {
+                const fileInput = document.getElementById(`${type}-file-input`);
+                const addBtn = document.getElementById(`${type}-add-btn`), viewBtn = document.getElementById(`${type}-view-btn`), deleteBtn = document.getElementById(`${type}-delete-btn`);
+                addBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', () => updateFileUI(type, fileInput.files.length > 0));
+                viewBtn.addEventListener('click', () => { const file = fileInput.files[0] || (editingIndex !== null ? sampleData[editingIndex][`${type}File`] : null); if (file) window.open(URL.createObjectURL(file), '_blank'); });
+                deleteBtn.addEventListener('click', () => { fileInput.value = ''; if (editingIndex !== null) sampleData[editingIndex][`${type}File`] = null; updateFileUI(type, false); });
+            }
+            function updateFileUI(type, hasFile) { document.getElementById(`${type}-add-btn`).classList.toggle('hidden', hasFile); document.getElementById(`${type}-view-btn`).classList.toggle('hidden', !hasFile); document.getElementById(`${type}-delete-btn`).classList.toggle('hidden', !hasFile); }
+            function resetFileInputs(type) { updateFileUI(type, false); }
+            document.querySelectorAll('.location-btn').forEach(button => { button.addEventListener('click', () => { document.querySelectorAll('.location-btn').forEach(btn => btn.classList.remove('active')); button.classList.add('active'); }); });
+            function getFutureDate(days) { const date = new Date(); date.setDate(date.getDate() + days); return date.toISOString().split('T')[0]; }
+            setupFileInput('passport'); setupFileInput('invoice');
+
+            function renderTable() {
+                tableBody.innerHTML = '';
+                const today = new Date(); today.setHours(0, 0, 0, 0);
+                const warningDate = new Date(); warningDate.setDate(today.getDate() + 40);
+                const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString('ru-RU') : '-';
+
+                // --- НОВАЯ ЛОГИКА ГРУППИРОВКИ ---
+                const groups = {};
+                sampleData.forEach((sample, index) => {
+                    const groupName = `${sample.component} ${sample.matrix}`;
+                    if (!groups[groupName]) {
+                        groups[groupName] = [];
+                    }
+                    groups[groupName].push({ ...sample, originalIndex: index });
+                });
+
+                let rowCounter = 1;
+                const sortedGroupNames = Object.keys(groups).sort();
+
+                sortedGroupNames.forEach(groupName => {
+                    const headerRow = document.createElement('tr');
+                    headerRow.classList.add('group-header');
+                    headerRow.innerHTML = `<td colspan="8">${groupName}</td>`;
+                    tableBody.appendChild(headerRow);
+
+                    const samplesInGroup = groups[groupName];
+                    samplesInGroup.forEach(sampleItem => {
+                        const { originalIndex, ...sample } = sampleItem;
+                        const expiry = new Date(sample.expiryDate);
+                        let statusClass = 'expiry-ok';
+                        let statusText = 'годен';
+                        
+                        if (!sample.expiryDate || expiry < today) {
+                            statusClass = 'expiry-expired';
+                            statusText = 'не годен';
+                        } else if (expiry <= warningDate) {
+                            statusClass = 'expiry-warning';
+                            statusText = 'годен';
+                        }
+
+                        let errorValue = `± ${sample.errorAbs || '-'}`;
+                        let errorType = 'абс.';
+                        if (sample.displayErrorType === 'rel' && sample.errorRel) {
+                            errorValue = `± ${sample.errorRel} %`;
+                            errorType = 'отн.';
+                        }
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${rowCounter++}</td>
+                            <td><b>${sample.grso}</b><br>${sample.name}</td>
+                            <td>${sample.concentration || '-'} ${sample.concentrationUnit || ''}</td>
+                            <td class="clickable-error" data-index="${originalIndex}">
+                                <div>${errorValue}</div>
+                                <div class="error-type">${errorType}</div>
+                            </td>
+                            <td class="expiry-cell ${statusClass}">
+                                <div class="expiry-content">
+                                    <div>${formatDate(sample.expiryDate)}</div>
+                                    <div class="expiry-status">${statusText}</div>
+                                </div>
+                            </td>
+                            <td>${sample.location}</td>
+                            <td>${sample.notes}</td>
+                            <td class="action-cell">
+                                <button class="action-button view" data-index="${originalIndex}" title="Просмотр">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                                <button class="action-button edit" data-index="${originalIndex}" title="Редактировать">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="action-button passport" data-index="${originalIndex}" title="Паспорт" ${!sample.passportFile ? 'disabled' : ''}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="action-button delete" data-index="${originalIndex}" title="Удалить">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </td>`;
+                        tableBody.appendChild(row);
+                    });
+                });
+            }
+            renderTable();
+        });
+    </script>
+</body>
+</html>       <line x1="16" y1="17" x2="8" y2="17"></line>
+                                        <polyline points="10 9 9 9 8 9"></polyline>
+                                    </svg>
+                                </button>
+                                <button class="action-button delete" data-index="${originalIndex}" title="Удалить">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+           

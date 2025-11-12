@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация отклонена</title>
+    <link rel="stylesheet" href="/css/registration-rejected.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="rejected-container">
+        <div class="rejected-card">
+            <!-- Иконка отклонения -->
+            <div class="animation-container">
+                <div class="rejected-icon">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+            </div>
+
+            <!-- Заголовок -->
+            <h1 class="rejected-title">Регистрация отклонена</h1>
+            
+            <!-- Описание -->
+            <div class="rejected-description">
+                <p>К сожалению, ваша заявка на регистрацию была отклонена администратором.</p>
+                <p>Вы можете попробовать зарегистрироваться снова или обратиться к администратору для уточнения деталей.</p>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="rejected-actions">
+                <a href="/" class="btn btn-primary" id="registerAgainBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Зарегистрироваться снова
+                </a>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Войти в систему
+                </a>
+            </div>
+
+            <!-- Дополнительная информация -->
+            <div class="rejected-footer">
+                <p class="footer-text">
+                    <i class="fas fa-envelope"></i>
+                    По вопросам регистрации обращайтесь к администратору системы
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // При загрузке страницы выходим из системы
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Выходим из системы
+                await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (error) {
+                console.error('Ошибка при выходе:', error);
+            }
+            
+            // Переключаем на форму регистрации при клике на кнопку
+            const registerBtn = document.getElementById('registerAgainBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Перенаправляем на главную с параметром для показа формы регистрации
+                    window.location.href = '/?register=true';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
